@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Kru Pai Classroom — Tense Matching Challenge – Set 1</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;700;900&family=Rubik:wght@500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --blue:#2f7df2;
+  --blue2:#eaf2ff;
+  --orange:#ff8a33;
+  --orange2:#fff1e7;
+  --ink:#0f172a;
+  --ok:#10b981;
+  --bad:#ef4444;
+  --card:#ffffff;
+  --muted:#94a3b8;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:
+  radial-gradient(1100px 600px at 80% -10%, rgba(47,125,242,.25), transparent 60%),
+  radial-gradient(900px 500px at 10% 110%, rgba(255,138,51,.18), transparent 60%),
+  linear-gradient(180deg,#f8fbff,#fdfdfd);
+  color:var(--ink); font-family:"Noto Sans Thai","Rubik",system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+}
+.header{position:sticky;top:0;z-index:10;background:linear-gradient(90deg,#ffffffee,#f8fbffee);
+  border-bottom:2px solid #e6eefc; box-shadow:0 10px 24px rgba(47,125,242,.10); backdrop-filter: blur(6px);
+}
+.banner{max-width:1000px;margin:auto;display:flex;align-items:center;gap:12px;padding:14px 16px}
+.logo{display:grid;place-items:center;width:46px;height:46px;border-radius:14px;
+  background:conic-gradient(from 0deg,#2f7df2,#ff8a33,#2f7df2);
+  color:#fff;font-weight:900;box-shadow:0 0 28px rgba(47,125,242,.35)
+}
+.brand{font-weight:900;font-size:clamp(18px,2.6vw,28px);letter-spacing:.3px;color:#2f7df2}
+.sub{margin-left:auto;font-size:13px;color:var(--muted)}
+
+.wrap{max-width:1000px;margin:22px auto;padding:0 16px}
+.card{background:var(--card);border:1px solid #e7eef9;border-radius:22px;box-shadow:0 14px 40px rgba(47,125,242,.12)}
+
+.start{padding:24px; display:grid; gap:18px; justify-items:center; text-align:center}
+.bigtitle{font-weight:900;font-size:clamp(24px,4.4vw,44px); color:var(--blue);}
+.tagline{font-size:clamp(14px,2.4vw,18px); color:#475569}
+.input{display:flex;gap:10px;align-items:center; background:var(--blue2); padding:12px 14px;border-radius:14px;border:2px solid #e3ecff}
+.input input{border:none;background:transparent; outline:none; font-size:18px; min-width:200px}
+.btn{border:none; cursor:pointer; padding:12px 16px;border-radius:14px; background:var(--blue); color:#fff; font-weight:900;
+  box-shadow:0 12px 0 #1b56a9, 0 20px 34px rgba(47,125,242,.35); transform:translateY(0); transition:.2s}
+.btn:hover{transform:translateY(-2px)}
+.btn.alt{background:var(--orange); box-shadow:0 12px 0 #c26112, 0 20px 34px rgba(255,138,51,.35)}
+.note{font-size:12px;color:#64748b}
+
+.hud{display:grid; grid-template-columns:1fr auto auto; align-items:center; gap:10px; padding:14px 16px; border-bottom:1px dashed #e7eef9}
+.hud .pill{background:var(--orange2); border:2px solid #ffd8bd;padding:8px 12px;border-radius:999px;font-weight:700;color:#c26112}
+.hud .score{background:var(--blue2); border:2px solid #cfe0ff; color:#1b56a9}
+.hud .step{font-weight:900;color:#334155}
+.hud .score b{color:var(--blue)}
+
+
+.stage{display:grid; grid-template-areas:
+  "qbox"
+  "fb"
+  "opts";
+  gap: 8px;
+  padding:18px 16px 28px 16px
+}
+.qbox{grid-area:qbox}
+.feedback{grid-area:fb; place-self:center; margin: 22px 0 6px; text-align:center}
+.options{grid-area:opts}
+/* Style B: medium cute feedback chip */
+.feedback span{
+  display:inline-block; padding:10px 14px; border-radius:16px; font-weight:900;
+  font-size: clamp(16px, 2.8vw, 20px);
+  box-shadow:0 8px 20px rgba(47,125,242,.10);
+  animation:popIn .26s ease-out both;
+}
+.fb-ok{ background:linear-gradient(180deg,#ecfff7,#ffffff); color:#0f7f55; border:2px solid #bff2de }
+.fb-no{ background:linear-gradient(180deg,#fff6f6,#ffffff); color:#b4233b; border:2px solid #fecdd3 }
+@keyframes popIn{ 0%{transform:scale(.92); opacity:0} 100%{transform:scale(1); opacity:1} }
+
+.qbox{background:linear-gradient(180deg,#ffffff,#f7fbff); border:2px solid #e6eefc; border-radius:18px; padding:18px; box-shadow:0 10px 26px rgba(47,125,242,.12);
+  margin:0 auto 16px auto; max-width:920px;
+  position:relative;  /* lower question a bit by default */
+}
+.qtxt{font-size:clamp(18px,3vw,26px); font-weight:900; color:#0f172a; text-align:center}
+.qen{font-size:clamp(18px,3.2vw,28px); font-weight:900; color:#e53935; text-align:center; text-shadow:0 2px 0 rgba(229,57,53,.18)}
+
+.options{max-width:920px; margin:16px auto 0 auto; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; position:relative; }
+.opt{background:#fff; border:2px solid #e7eef9; border-radius:16px; padding:14px 14px; min-height:66px;
+  box-shadow:0 12px 26px rgba(47,125,242,.10); display:flex; align-items:center; gap:10px; cursor:pointer; transition:.15s; font-size:clamp(16px,2.6vw,20px); font-weight:900}
+.opt span.key{width:34px;height:34px;display:grid;place-items:center;border-radius:10px;background:var(--blue2); color:#1b56a9; border:2px solid #cfe0ff}
+.opt:hover{transform:translateY(-1px); border-color:#cfe0ff}
+.opt.correct{border-color:#a7f3d0; background:linear-gradient(180deg,#f0fff8,#ffffff)}
+.opt.correct .key{background:#eafff5; border-color:#bff2de; color:#0f7f55}
+.opt.wrong{border-color:#fecaca; background:linear-gradient(180deg,#fff6f6,#ffffff)}
+.opt.wrong .key{background:#fff1f2; border-color:#fecdd3; color:#b4233b}
+
+.feedback{height:30px; display:grid; place-items:center; font-weight:900; font-size:18px; margin-top:12px}
+.fb-ok{color:var(--ok)} .fb-no{color:var(--bad)}
+
+.footer{padding:18px; display:flex; justify-content:center; gap:10px}
+.footer .btn{min-width:200px}
+
+/* summary layout when visible */
+.summary{padding:22px; display:grid; gap:12px; justify-items:center; text-align:center}
+
+.hide{display:none !important}
+.pulse{animation:pulse 1s ease-in-out infinite}
+@keyframes pulse{0%{transform:translateY(0)}50%{transform:translateY(-2px)}100%{transform:translateY(0)}}
+
+/* progress bar */
+.progress{height:10px;background:#eef4ff;border-radius:999px;overflow:hidden;border:1px solid #deebff}
+.progress > div{height:100%; background:linear-gradient(90deg,#2f7df2,#ff8a33); width:0%}
+
+/* mobile tweaks */
+@media (max-width: 520px){ .options{grid-template-columns:1fr;} }
+/* --- Fun Sound + Emoji Pop (Kru Pai Classroom upgrade) --- */
+.emoji-pop{
+  position:fixed; inset:0;
+  display:grid; place-items:center;
+  pointer-events:none;
+  z-index:9999;
+}
+.emoji-inner{
+  font-size:clamp(64px,16vw,140px);
+  font-weight:900;
+  line-height:1;
+  transform:translateY(8px) scale(.92);
+  opacity:0;
+  filter:drop-shadow(0 18px 28px rgba(47,125,242,.25));
+}
+.emoji-inner.ok{
+  filter:drop-shadow(0 22px 34px rgba(47,125,242,.35)) drop-shadow(0 0 18px rgba(47,125,242,.35));
+}
+.emoji-inner.no{
+  filter:drop-shadow(0 20px 30px rgba(239,68,68,.22));
+}
+.emoji-inner.run{
+  animation:emojiPop 1.4s ease-out both;
+}
+@keyframes emojiPop{
+  0%{transform:translateY(10px) scale(.86); opacity:0}
+  14%{transform:translateY(-6px) scale(1.08); opacity:1}
+  55%{transform:translateY(-2px) scale(1.00); opacity:1}
+  100%{transform:translateY(8px) scale(.96); opacity:0}
+}
+
+/* Make options feel more like game cards */
+.opt{
+  border-radius:18px;
+  min-height:74px;
+  padding:16px 16px;
+  gap:12px;
+}
+.opt span.key{
+  width:38px;height:38px;border-radius:12px;
+  font-weight:900;
+}
+.opt:hover{transform:translateY(-2px)}
+.opt:active{transform:translateY(0px) scale(.99)}
+
+</style>
+</head>
+<body>
+  <div class="header">
+    <div class="banner">
+      <div class="logo">KP</div>
+      <div class="brand">Kru Pai Classroom</div>
+      <div class="sub">Tense Matching Challenge – Set 1</div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <!-- START CARD -->
+    <div id="intro" class="card start">
+      <div class="bigtitle">Tense Matching Challenge</div>
+      <div class="tagline">เลือก <b>tense</b> ให้ตรงกับประโยค (30 ข้อ) — โทน <span style="color:var(--blue)">ฟ้า</span> + <span style="color:var(--orange)">ส้ม</span> น่ารักอ่านง่าย 💙🧡</div>
+      <div class="input"><span>ชื่อเล่น:</span> <input id="nickname" placeholder="พิมพ์ชื่อก่อนเริ่ม"/></div>
+      <button class="btn alt" onclick="startGame()">เริ่มเกมเลย!</button>
+      <div class="note">เหมาะกับประถม: Present/Past/Future + Continuous + Perfect • ตอบถูกมีคำชม • ตอบผิดให้กำลังใจ</div>
+    </div>
+
+    <!-- GAME CARD -->
+    <div id="game" class="card hide">
+      <div class="hud">
+        <div class="pill step">ข้อที่ <b id="step">1</b> / 30</div>
+        <div class="pill score">คะแนน: <b id="score">0</b></div>
+        <div class="pill">ผู้เล่น: <b id="who">-</b></div>
+      </div>
+      <div class="progress"><div id="bar"></div></div>
+
+      <div class="stage">
+        <div class="qbox"><div id="qth" class="qtxt">เลือก tense ที่ถูกต้องจากประโยค</div><div id="qen" class="qen">—</div></div>
+        <div class="options" id="opts"></div>
+        <div class="feedback" id="fb"></div>
+      </div>
+
+      <div class="footer">
+        <button class="btn" onclick="nextQ()" id="nextBtn" disabled>ข้อต่อไป ➜</button>
+      </div>
+    </div>
+
+    <!-- SUMMARY CARD -->
+    <div id="summary" class="card summary hide" style="padding:22px; gap:12px; justify-items:center; text-align:center">
+      <div class="bigtitle">จบภารกิจแล้ว! 🎉</div>
+      <div class="tagline">คะแนนรวมของ <b id="who2">-</b> คือ <b id="score2">0</b> / 30</div>
+      <div style="display:grid; gap:8px; max-width:720px">
+        <div>เก่งมาก! ถ้าอยากเก่งขึ้นอีก ลองเล่นซ้ำ แล้วพยายามคิดโครง tense จากคำช่วย/ตัวบอกเวลา 💪</div>
+      </div>
+      <div class="footer">
+        <button class="btn alt" onclick="restart()">เล่นใหม่อีกครั้ง</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+const Q_EMOJIS = ['😊','😄','🤩','✨','🌟','🧠','🎯','💛','💙'];
+const TENSES = [
+  "Present Simple",
+  "Present Continuous",
+  "Future Simple",
+  "Past Simple",
+  "Present Perfect"
+];
+
+// 30 items: sentence + answer tense
+const ITEMS = [
+  {en:"She plays the piano every day.", ans:"Present Simple"},
+  {en:"They are watching a cartoon now.", ans:"Present Continuous"},
+  {en:"I will visit my grandma tomorrow.", ans:"Future Simple"},
+  {en:"We walked to school yesterday.", ans:"Past Simple"},
+  {en:"He has finished his homework already.", ans:"Present Perfect"},
+
+  {en:"The sun rises in the east.", ans:"Present Simple"},
+  {en:"My dad is cooking dinner at the moment.", ans:"Present Continuous"},
+  {en:"I will help you with your bag.", ans:"Future Simple"},
+  {en:"She studied English last night.", ans:"Past Simple"},
+  {en:"They have seen that movie three times.", ans:"Present Perfect"},
+
+  {en:"Cats catch mice.", ans:"Present Simple"},
+  {en:"The children are playing football in the yard.", ans:"Present Continuous"},
+  {en:"We will go to the park this weekend.", ans:"Future Simple"},
+  {en:"I watched a science show on TV.", ans:"Past Simple"},
+  {en:"He has never been to Chiang Mai.", ans:"Present Perfect"},
+
+  {en:"I usually drink milk before bed.", ans:"Present Simple"},
+  {en:"She is reading a comic right now.", ans:"Present Continuous"},
+  {en:"They will join the school trip next month.", ans:"Future Simple"},
+  {en:"We ate noodles this morning.", ans:"Past Simple"},
+  {en:"I have done my chores already.", ans:"Present Perfect"},
+
+  {en:"Birds fly in the sky.", ans:"Present Simple"},
+  {en:"We are studying for the test today.", ans:"Present Continuous"},
+  {en:"I will call you after class.", ans:"Future Simple"},
+  {en:"She painted a picture yesterday.", ans:"Past Simple"},
+  {en:"They have finished the project.", ans:"Present Perfect"},
+
+  {en:"He plays badminton on Fridays.", ans:"Present Simple"},
+  {en:"The dog is sleeping on the sofa.", ans:"Present Continuous"},
+  {en:"We will celebrate your birthday next week.", ans:"Future Simple"},
+  {en:"I cleaned my room an hour ago.", ans:"Past Simple"},
+  {en:"She has just washed the dishes.", ans:"Present Perfect"}
+];
+
+// shuffle
+function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]];} return a; }
+
+let order = shuffle([...Array(ITEMS.length).keys()]);
+let idx = 0, score = 0, lock=false, nickname="";
+let optionsForQ = []; // current options
+
+function startGame(){
+  _initAudio();
+  clickSound();
+  nickname = (document.getElementById('nickname').value || "ผู้เล่น").trim();
+  document.getElementById('who').textContent = nickname;
+  document.getElementById('who2').textContent = nickname;
+  document.getElementById('intro').classList.add('hide');
+  document.getElementById('game').classList.remove('hide');
+  idx = 0; score = 0; lock=false;
+  order = shuffle([...Array(ITEMS.length).keys()]);
+  renderQ();
+  beep(1000,0.06,'triangle');
+}
+document.getElementById('nickname').addEventListener('keydown',e=>{ if(e.key==='Enter'){ startGame(); }});
+
+function renderQ(){
+  lock=false;
+  const item = ITEMS[ order[idx] ];
+  document.getElementById('step').textContent = (idx+1);
+  document.getElementById('score').textContent = score;
+  document.getElementById('bar').style.width = ((idx)/ITEMS.length*100)+'%';
+  document.getElementById('qth').textContent = "เลือก tense ที่ถูกต้องจากประโยคนี้";
+  const e1 = Q_EMOJIS[Math.floor(Math.random()*Q_EMOJIS.length)];
+  const e2 = Q_EMOJIS[Math.floor(Math.random()*Q_EMOJIS.length)];
+  document.getElementById('qen').textContent = `${e1} “ ${item.en} ” ${e2}`;
+
+  // generate options: include answer + 3 other random tenses
+  const others = shuffle(TENSES.filter(t=>t!==item.ans)).slice(0,3);
+  optionsForQ = shuffle([item.ans, ...others]);
+
+  const ids = ['A','B','C','D'];
+  const container = document.getElementById('opts');
+  container.innerHTML = "";
+  optionsForQ.forEach((t,i)=>{
+    const div = document.createElement('div');
+    div.className = 'opt';
+    div.innerHTML = `<span class="key">${ids[i]}</span> ${t}`;
+    div.addEventListener('click', ()=> choose(t, div));
+    container.appendChild(div);
+  });
+
+  document.getElementById('fb').textContent = "";
+  document.getElementById('nextBtn').disabled = true;
+  const pop=document.getElementById('emojiPop'); if(pop) pop.classList.add('hide');
+}
+
+function choose(t, el){
+  _initAudio();
+  clickSound();
+  if(lock) return;
+  const item = ITEMS[ order[idx] ];
+  const container = document.getElementById('opts');
+  const opts = [...container.querySelectorAll('.opt')];
+  lock = true;
+
+  if(t === item.ans){
+    el.classList.add('correct');
+    score += 1;
+    document.getElementById('score').textContent = score;
+    document.getElementById('fb').innerHTML = `<span class="fb-ok">เยี่ยม! ถูกต้องจ้า 🎉</span>`;
+    showEmoji('ok');
+    beep(1200,0.08,'triangle');
+  }else{
+    el.classList.add('wrong');
+    // also mark the correct one for learning
+    const idxCorrect = optionsForQ.indexOf(item.ans);
+    if(idxCorrect>=0) opts[idxCorrect].classList.add('correct');
+    document.getElementById('fb').innerHTML = `<span class="fb-no">ยังไม่ใช่ ลองสังเกตคำบอกเวลา/โครงสร้างอีกนิดนะ 💪</span>`;
+    showEmoji('no');
+    beep(220,0.10,'sawtooth');
+  }
+  document.getElementById('nextBtn').disabled = false;
+}
+
+function nextQ(){
+  clickSound();
+  if(idx < ITEMS.length-1){
+    idx++;
+    renderQ();
+  }else{
+    endGame();
+  }
+}
+
+function endGame(){
+  document.getElementById('game').classList.add('hide');
+  document.getElementById('summary').classList.remove('hide');
+  document.getElementById('score2').textContent = score;
+  document.getElementById('bar').style.width = '100%';
+  beep(880,0.12,'sine'); setTimeout(()=>beep(1320,0.12,'sine'),120);
+}
+
+function restart(){
+  clickSound();
+  score=0; idx=0; lock=false; order=shuffle([...Array(ITEMS.length).keys()]);
+  document.getElementById('summary').classList.add('hide');
+  document.getElementById('intro').classList.remove('hide');
+}
+
+/* Simple WebAudio beeps (shared AudioContext for stability) */
+let _audioCtx = null;
+function _initAudio(){
+  try{
+    if(!_audioCtx){
+      _audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+    }
+    if(_audioCtx.state === 'suspended'){ _audioCtx.resume(); }
+  }catch(e){ /* ignore */ }
+}
+function beep(f=880, d=0.08, type='sine', vol=0.20){
+  try{
+    _initAudio();
+    if(!_audioCtx) return;
+    const ctx = _audioCtx;
+    const o = ctx.createOscillator();
+    const g = ctx.createGain();
+    o.type = type; o.frequency.value = f;
+    o.connect(g); g.connect(ctx.destination);
+    const now = ctx.currentTime;
+    g.gain.setValueAtTime(0.001, now);
+    g.gain.exponentialRampToValueAtTime(Math.max(0.03, vol), now + 0.01);
+    g.gain.exponentialRampToValueAtTime(0.001, now + d);
+    o.start(now);
+    o.stop(now + d + 0.02);
+  }catch(e){/* ignore */}
+}
+function clickSound(){ beep(560, 0.035, 'square', 0.10); }
+
+/* Big friendly emoji feedback */
+let _emojiTimer = null;
+function showEmoji(kind){
+  const pop = document.getElementById('emojiPop');
+  const inner = document.getElementById('emojiInner');
+  if(!pop || !inner) return;
+
+  const isOk = (kind === 'ok');
+  inner.textContent = isOk ? "🙂" : "😠";
+  inner.classList.remove('ok','no','run');
+  inner.classList.add(isOk ? 'ok' : 'no');
+
+  pop.classList.remove('hide');
+
+  // restart animation
+  void inner.offsetWidth;
+  inner.classList.add('run');
+
+  if(_emojiTimer) clearTimeout(_emojiTimer);
+  _emojiTimer = setTimeout(()=>{
+    pop.classList.add('hide');
+    inner.classList.remove('run');
+  }, 1400);
+}
+</script>
+
+  <div id="emojiPop" class="emoji-pop hide" aria-hidden="true"><div id="emojiInner" class="emoji-inner">🙂</div></div>
+</body>
+</html>
